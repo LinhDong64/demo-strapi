@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-// import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
-import DecoupledEditor from 'ckeditor-build-with-simple-upload-provider-strapi';
+import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import styled from 'styled-components';
 import { auth } from 'strapi-helper-plugin';
+import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter';
 
 const Wrapper = styled.div`
   .ck-editor__main {
@@ -14,50 +14,6 @@ const Wrapper = styled.div`
     }
   }
 `;
-const highlight = [
-  {
-    model: 'greenMarker',
-    class: 'marker-green',
-    title: 'Green marker',
-    color: 'var(--ck-highlight-marker-green)',
-    type: 'marker'
-  },
-  {
-    model: 'redPen',
-    class: 'pen-red',
-    title: 'Red pen',
-    color: 'var(--ck-highlight-pen-red)',
-    type: 'pen'
-  }
-]
-const configuration = {
-  toolbar: [
-    'heading',
-    '|',
-    'fontSize',
-    'fontFamily',
-    'fontBackgroundColor',
-    'fontcolor',
-    '|',
-    'bold',
-    'italic',
-    'underLine',
-    'strikethrough',
-    // 'highlight',
-    '|',
-    'alignment',
-    '|',
-    'numberedList',
-    'bulletedList',
-    '|',
-    'indent',
-    'outdent',
-    '|',
-    'undo',
-    'redo',
-    'blockQuote',
-  ],
-};
 
 const Editor = ({ onChange, name, value }) => {
   const jwtToken = auth.getToken();
@@ -85,22 +41,22 @@ const Editor = ({ onChange, name, value }) => {
           }
         }}
         editor={DecoupledEditor}
-        config={configuration}
         data={value}
         onChange={(event, editor) => {
           const data = editor.getData();
           onChange({ target: { name, value: data } });
         }}
-        // shouldNotGroupWhenFull={false}
-        // highlight 
-        config={{
-          simpleUpload: {
-            uploadUrl: `${strapi.backendURL}/upload`,
-            headers: {
-              Authorization: "Bearer " + jwtToken
-            }
-          }
-        }}
+        plugins={[SimpleUploadAdapter]}
+        simpleUpload = {{uploadUrl: 'http://example.com',
+
+        // Enable the XMLHttpRequest.withCredentials property.
+        withCredentials: true,
+
+        // Headers sent along with the XMLHttpRequest to the upload server.
+        headers: {
+            'X-CSRF-TOKEN': 'CSRF-Token',
+            Authorization: 'Bearer <JSON Web Token>'}}
+        }
       />
     </Wrapper>
   );
