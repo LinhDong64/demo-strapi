@@ -12,6 +12,7 @@
   "devDependencies": {},
   "dependencies": {
     "@ckeditor/ckeditor5-upload": "^28.0.0",
+    "@martinkronstad/ckeditor5-strapi-upload-adapter": "^18.1.0",
     "knex": "0.21.18",
     "sqlite3": "5.0.0",
     "strapi": "3.6.5",

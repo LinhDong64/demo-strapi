@@ -4,7 +4,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import styled from 'styled-components';
 import { auth } from 'strapi-helper-plugin';
-import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter';
+import StrapiUploadAdapter from '@martinkronstad/ckeditor5-strapi-upload-adapter'; 
 
 const Wrapper = styled.div`
   .ck-editor__main {
@@ -46,17 +46,16 @@ const Editor = ({ onChange, name, value }) => {
           const data = editor.getData();
           onChange({ target: { name, value: data } });
         }}
-        plugins={[SimpleUploadAdapter]}
-        simpleUpload = {{uploadUrl: 'http://example.com',
-
-        // Enable the XMLHttpRequest.withCredentials property.
-        withCredentials: true,
-
-        // Headers sent along with the XMLHttpRequest to the upload server.
-        headers: {
-            'X-CSRF-TOKEN': 'CSRF-Token',
-            Authorization: 'Bearer <JSON Web Token>'}}
-        }
+        config={{
+          extraPlugins: [StrapiUploadAdapter],
+          strapiUploadAdapter: {
+            uploadUrl: `${strapi.backendURL}/upload`,
+            absUrl: `${strapi.backendURL}`,
+            headers: {
+              Authorization: "Bearer " + jwtToken
+            }
+          }        
+        }}
       />
     </Wrapper>
   );
